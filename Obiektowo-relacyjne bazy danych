@@ -1,0 +1,101 @@
+zadanie 1
+create type SAMOCHOD AS object(
+MARKA VARCHAR2(20),
+MODEL VARCHAR2(20),
+KILOMETRY NUMBER,
+DATA_PRODUKCJI DATE,
+CENA NUMBER(10,2)
+);
+
+create Table SAMOCHODY OF SAMOCHOD;
+
+INSERT INTO SAMOCHODY VALUES(
+NEW SAMOCHOD('fiat','BRAVA',60000,DATE '1999-11-30',25000)
+);
+
+INSERT INTO SAMOCHODY VALUES(
+NEW SAMOCHOD('MAZDA','323',12000,DATE '1997-11-30',52000)
+);
+
+
+INSERT INTO SAMOCHODY VALUES(
+NEW SAMOCHOD('FORD','MONDEO',80000,DATE '1998-11-30',45000)
+);
+
+
+zadanie 2
+
+create Table WLASCICIELE(
+IMIE VARCHAR(100),
+NAZWISKO VARCHAR(100),
+AUTO SAMOCHOD
+);
+
+INSERT INTO WLASCICIELE VALUES( 
+'JAN', 'KOWALSKI', NEW SAMOCHOD('FIAT', 'SEICENTO', 30000, DATE'0010-12-02', 19500)
+);
+
+
+INSERT INTO WLASCICIELE VALUES( 
+'ADAM', 'NOWAK',NEW SAMOCHOD('OPEL', 'ASTRA', 34000, DATE'0009-06-01', 33700)
+);
+
+
+
+ZADANIE 3 
+ALTER type SAMOCHOD
+    ADD member function WARTOSC
+   return number CASCADE;
+
+create OR REPLACE type body SAMOCHOD  as
+        member function WARTOSC RETURN NUMBER IS
+    n_of_years NUMBER;
+    price NUMBER := CENA;
+    BEGIN
+        n_of_years :=EXTRACT(YEAR FROM sysdate) -EXTRACT(YEAR FROM DATA_PRODUKCJI);
+        FOR rok in 1..n_of_years loop
+        price := price *0.9;
+        end loop;
+    RETURN price;
+
+    END WARTOSC;
+END;
+
+
+zadanie 4
+
+ALTER TYPE SAMOCHOD ADD MAP MEMBER FUNCTION odwzoruj
+RETURN NUMBER CASCADE INCLUDING TABLE DATA
+
+create or replace type body SAMOCHOD  as
+
+     member function WARTOSC RETURN NUMBER IS
+    n_of_years NUMBER;
+    price NUMBER := CENA;
+    BEGIN
+        n_of_years :=EXTRACT(YEAR FROM sysdate) -EXTRACT(YEAR FROM DATA_PRODUKCJI);
+        FOR rok in 1..n_of_years loop
+        price := price *0.9;
+        end loop;
+    RETURN price;
+
+    END WARTOSC;
+    
+    
+    MAP MEMBER FUNCTION odwzoruj RETURN NUMBER IS
+    begin 
+        return EXTRACT(YEAR FROM sysdate) -EXTRACT(YEAR FROM DATA_PRODUKCJI) + KILOMETRY/1000;
+    end odwzoruj;
+END;
+
+   
+zadanie 5 
+
+create type WLASCICIEL AS object(
+IMIE VARCHAR(100),
+NAZWISKO VARCHAR(100)
+);
+
+
+ ALTER TYPE SAMOCHOD 
+   ADD ATTRIBUTE (wlasciciell REF WLASCICIEL) CASCADE
