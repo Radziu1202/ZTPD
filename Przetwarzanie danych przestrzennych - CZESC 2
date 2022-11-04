@@ -1,0 +1,33 @@
+ZADANIE 1A
+INSERT INTO USER_SDO_GEOM_METADATA VALUES ('FIGURY','KSZTALT',
+    MDSYS.SDO_DIM_ARRAY(
+        MDSYS.SDO_DIM_ELEMENT('X', 0, 50, 0.01),
+        MDSYS.SDO_DIM_ELEMENT('Y', 0, 50, 0.01)
+    ),
+    NULL
+);
+
+ZADANIE 1B
+SELECT SDO_TUNE.ESTIMATE_RTREE_INDEX_SIZE(3000000,8192,10,2,0)FROM FIGURY;
+
+ZADANIE 1C
+CREATE INDEX R_TREE_INDEX ON FIGURY(KSZTALT) INDEXTYPE IS MDSYS.SPATIAL_INDEX;
+
+ZADANIE 1D
+select ID
+from FIGURY
+where SDO_FILTER(KSZTALT,
+SDO_GEOMETRY(2001,null,
+ SDO_POINT_TYPE(3,3,null),
+ null,null)) = 'TRUE';
+
+SDO_FILTER
+wykorzystuje jedynie pierwszą fazę zapytania dlatego, dla indeksu r-tree funkcja ta uzna, że z punktem 3,3 mają "coś
+wspólnego" wszystkie 3 geometrie.
+
+ZADANIE 1E
+select ID
+from FIGURY
+where SDO_RELATE(KSZTALT,
+ SDO_GEOMETRY(2001,null,SDO_POINT_TYPE(3,3,null),null,null),
+ 'mask=ANYINTERACT') = 'TRUE';
