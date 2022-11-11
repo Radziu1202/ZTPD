@@ -1,0 +1,122 @@
+ZADANIE 1
+
+CREATE TABLE DOKUMENTY (
+    ID NUMBER(12) PRIMARY KEY,
+    DOKUMENT CLOB
+);
+
+ZADANIE 2
+
+DECLARE 
+    TEST_TEXT CLOB;
+BEGIN
+    FOR i in 1..1000
+    LOOP
+        TEST_TEXT := CONCAT(text, 'Oto tekst');
+    END LOOP;
+    INSERT INTO DOKUMENTY VALUES(1, TEST_TEXT);
+END;
+
+ZADANIE 3
+A)
+SELECT * FROM DOKUMENTY;
+B)
+SELECT ID, UPPER(DOKUMENT) FROM DOKUMENTY;
+C)
+SELECT LENGTH(DOKUMENT) FROM DOKUMENTY;
+D)
+SELECT DBMS_LOB.GETLENGTH(DOKUMENT) FROM DOKUMENTY;
+E)
+SELECT SUBSTR(DOKUMENT, 5, 1000) FROM DOKUMENTY;
+F)
+SELECT DBMS_LOB.SUBSTR(DOKUMENT, 5, 1000) FROM DOKUMENTY;
+
+ZADANIE 4
+INSERT INTO DOKUMENTY VALUES(2, EMPTY_CLOB());
+
+ZADANIE 5
+INSERT INTO DOKUMENTY VALUES (3, NULL);
+COMMIT;
+
+ZADANIE 6
+A)
+SELECT * FROM DOKUMENTY;
+B)
+SELECT ID, UPPER(DOKUMENT) FROM DOKUMENTY;
+C)
+SELECT LENGTH(DOKUMENT) FROM DOKUMENTY;
+D)
+SELECT DBMS_LOB.GETLENGTH(DOKUMENT) FROM DOKUMENTY;
+E)
+SELECT SUBSTR(DOKUMENT, 5, 1000) FROM DOKUMENTY;
+F)
+SELECT DBMS_LOB.SUBSTR(DOKUMENT, 5, 1000) FROM DOKUMENTY;
+
+ZADANIE 7
+SELECT *  FROM ALL_DIRECTORIES;
+
+ZADANIE 8
+DECLARE
+  lobd CLOB;
+     fils BFILE := BFILENAME('ZSBD_DIR','dokument.txt');
+     doffset INTEGER := 1;
+     soffset INTEGER := 1;
+     langctx INTEGER := 0;
+     warn INTEGER := null;
+BEGIN
+     SELECT dokument into lobd from dokumenty where id=2 FOR UPDATE;
+     DBMS_LOB.fileopen(fils, DBMS_LOB.file_readonly);
+     DBMS_LOB.LOADCLOBFROMFILE(lobd, fils, DBMS_LOB.LOBMAXSIZE, doffset, soffset, 0, langctx, warn);
+     DBMS_LOB.FILECLOSE(fils);
+     COMMIT;
+     dbms_output.put_line('Status - ' || warn);
+END;
+
+ZADANIE 9
+UPDATE DOKUMENTY SET dokument = to_clob(BFILENAME('ZSBD_DIR','dokument.txt')) WHERE id = 3;
+
+ZADANIE 10
+SELECT * FROM DOKUMENTY;
+
+ZADANIE 11
+SELECT dbms_lob.getlength(dokument) FROM DOKUMENTY;
+
+ZADANIE 12
+DROP TABLE DOKUMENTY;
+
+ZADANIE 13
+CREATE OR REPLACE PROCEDURE CLOB_CENSOR(
+    lobd IN OUT CLOB,
+    to_replace VARCHAR2
+)
+IS
+    position INTEGER;
+    replacement VARCHAR2(50);
+    counter INTEGER;
+BEGIN
+    FOR counter IN 1..length(to_replace) LOOP
+        replacement := replacement || '.';
+    END LOOP;
+
+    LOOP
+        position := dbms_lob.instr(lobd, to_replace, 1, 1);
+        EXIT WHEN position = 0;
+        dbms_lob.write(lobd, LENGTH(to_replace), position, replacement);
+    END LOOP;
+END CLOB_CENSOR;
+
+ZADANIE 14
+CREATE TABLE TABLE_COPY AS SELECT * FROM ZSBD_TOOLS.BIOGRAPHIES;
+SELECT * from TABLE_COPY;
+
+DECLARE
+    lobd clob;
+begin
+    SELECT bio INTO lobd FROM TABLE_COPY WHERE ID = 1 FOR UPDATE;
+    clob_censor(lobd, 'Cimrman');
+end;
+
+SELECT * FROM TABLE_COPY;
+
+ZADANIE 15
+DROP TABLE TABLE_COPY;
