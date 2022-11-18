@@ -1,0 +1,115 @@
+ćwiczenie 2A
+
+SELECT
+    miasta.CITY_NAME miasto,
+    ROUND(SDO_NN_DISTANCE(1), 2) dystans
+FROM MAJOR_CITIES miasta, MAJOR_CITIES miasta2
+WHERE
+    miasta.CITY_NAME <>'Warsaw'
+    AND miasta2.CITY_NAME ='Warsaw'
+    AND SDO_NN(miasta.GEOM,miasta2.GEOM,'SDO_NUM_RES=10 UNIT=m',1) = 'TRUE'
+    
+    
+ćwiczenie 2B
+
+SELECT
+    miasta.CITY_NAME miasto
+FROM MAJOR_CITIES miasta, MAJOR_CITIES miasta2
+WHERE
+    miasta.CITY_NAME <>'Warsaw'
+    AND miasta2.CITY_NAME ='Warsaw'
+    AND SDO_NN(miasta.GEOM,miasta2.GEOM,'distance=100 UNIT=km') = 'TRUE'
+    
+cwiczenie 2C
+
+SELECT
+    miasta.CITY_NAME miasto, boundaries.CNTRY_NAME panstwo
+FROM MAJOR_CITIES miasta, COUNTRY_BOUNDARIES boundaries
+WHERE
+   boundaries.CNTRY_NAME = 'Slovakia';
+   AND SDO_RELATE(miasta.GEOM, boundaries.GEOM, 'mask=INSIDE') = 'TRUE'
+   
+cwiczenie 2D
+SELECT
+    ROUND(SDO_GEOM.SDO_DISTANCE(boundaries.GEOM, boundaries2.GEOM, 1, 'unit=km'), 2) dystanas, boundaries.CNTRY_NAME panstwo
+FROM COUNTRY_BOUNDARIES boundaries2, COUNTRY_BOUNDARIES boundaries
+WHERE
+    boundaries2.CNTRY_NAME = 'Poland'
+    AND SDO_RELATE(boundaries2.GEOM, boundaries.GEOM, 'mask=ANYINTERACT') != 'TRUE'
+   
+
+Cwiczenie 3A
+
+SELECT
+    boundaries.CNTRY_NAME,
+    ROUND(SDO_GEOM.SDO_LENGTH(
+        SDO_GEOM.SDO_INTERSECTION(
+            boundaries.GEOM,
+            boundaries2.GEOM,
+            1),
+        1,
+        'unit=km'),
+    2) ODLEGLOSC
+FROM 
+    COUNTRY_BOUNDARIES boundaries, COUNTRY_BOUNDARIES boundaries2
+WHERE
+    boundaries2.CNTRY_NAME = 'Poland'
+    AND SDO_FILTER(boundaries.GEOM, boundaries2.GEOM) = 'TRUE' 
+     
+
+
+CWICZENIE 3B
+SELECT
+    boundaries.CNTRY_NAME
+FROM 
+    COUNTRY_BOUNDARIES boundaries 
+WHERE
+    SDO_GEOM.SDO_AREA(boundaries.GEOM) = 
+    (SELECT MAX(SDO_GEOM.SDO_AREA(boundaries.GEOM)) FROM COUNTRY_BOUNDARIES);
+     
+
+CWICZENIE 3C
+SELECT
+    ROUND( SDO_GEOM.SDO_AREA(SDO_GEOM.SDO_MBR(SDO_GEOM.SDO_UNION(
+                    MIASTO.GEOM,
+                    MIASTO2.GEOM,
+                    0.01)), 1,  'unit=SQ_KM'),2) SQ_KM
+FROM MAJOR_CITIES MIASTO, MAJOR_CITIES MIASTO2
+WHERE MIASTO.CITY_NAME = 'Warsaw' 
+AND MIASTO2.CITY_NAME = 'Lodz';
+
+
+cwiczenie 3D
+
+SELECT
+    SDO_GEOM.SDO_UNION(boundaries.GEOM, miasta.GEOM, 0.01).GET_DIMS()||
+    SDO_GEOM.SDO_UNION(boundaries.GEOM, miasta.GEOM, 0.01).GET_LRS_DIM()||
+    LPAD(SDO_GEOM.SDO_UNION(boundaries.GEOM, miasta.GEOM, 0.01).GET_GTYPE(), 2, '0') GTYPE
+FROM  MAJOR_CITIES miasta, COUNTRY_BOUNDARIES boundaries
+WHERE
+    miasta.CITY_NAME = 'Prague'
+    AND boundaries.CNTRY_NAME = 'Poland';
+    
+ cwiczenie 3E
+
+    
+SELECT
+    miasto.CITY_NAME, boundaries.CNTRY_NAME
+FROM
+    MAJOR_CITIES miasto,COUNTRY_BOUNDARIES boundaries
+WHERE 
+    SDO_GEOM.SDO_DISTANCE( SDO_GEOM.SDO_CENTROID(boundaries.GEOM, 1),miasto.GEOM,1) = (
+            SELECT
+                MIN(SDO_GEOM.SDO_DISTANCE(SDO_GEOM.SDO_CENTROID(boundaries.GEOM, 1), miasto.GEOM, 1))
+            FROM 
+                COUNTRY_BOUNDARIES boundaries, MAJOR_CITIES miasto
+            WHERE
+                boundaries.CNTRY_NAME = miasto.CNTRY_NAME
+        )
+     AND  boundaries.CNTRY_NAME = miasto.CNTRY_NAME;
+  
+cwiczenie 3F
+
+
+
+    
