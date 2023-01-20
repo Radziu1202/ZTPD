@@ -1,0 +1,70 @@
+        //ZADANIE 5
+     //   EPDeployment deployment = compileAndDeploy(epRuntime,
+   //         "SELECT istream data, kursZamkniecia, spolka, max(kursZamkniecia)-kursZamkniecia AS roznica FROM KursAkcji.win:ext_timed_batch(data.getTime(), 1 day)"); 
+     
+
+   //  ZADANIE 6
+     //    EPDeployment deployment = compileAndDeploy(epRuntime,
+       // "SELECT istream data, kursZamkniecia, spolka, max(kursZamkniecia) - kursZamkniecia AS roznica " +
+         //   "FROM KursAkcji(spolka IN ('IBM', 'Microsoft', 'Honda')).win:ext_timed_batch(data.getTime(), 1 days)");
+
+    //ZADANIE 7 A
+    //    EPDeployment deployment = compileAndDeploy(epRuntime,
+      //  "SELECT istream data, kursOtwarcia, kursZamkniecia, spolka FROM KursAkcji.win:length(1)" +
+        //    "WHERE kursZamkniecia > kursOtwarcia");
+
+
+    //ZADANIE 7B
+//        EPDeployment deployment = compileAndDeploy(epRuntime,
+//        "SELECT istream data, kursOtwarcia, kursZamkniecia, spolka FROM KursAkcji(KursAkcji.roznicaKursow(kursOtwarcia, kursZamkniecia) > 0).win:length(1)");
+        
+        
+       //ZADANIE 8
+   //     EPDeployment deployment = compileAndDeploy(epRuntime,
+   //         "SELECT istream data, spolka, kursZamkniecia, max(kursZamkniecia)-kursZamkniecia AS roznica FROM KursAkcji(spolka IN ( 'CocaCola','PepsiCo')).win:ext_timed(data.getTime(), 7 days)");
+
+
+//ZADANIE 9
+      //  EPDeployment deployment = compileAndDeploy(epRuntime,
+        //"SELECT istream data, spolka, kursZamkniecia, max(kursZamkniecia) FROM KursAkcji(spolka IN ('CocaCola','PepsiCo')).win:ext_timed_batch(data.getTime(), 1 days)" +
+          //  "HAVING max(kursZamkniecia) = kursZamkniecia");
+
+
+ //ZADANIE 10
+    //    EPDeployment deployment = compileAndDeploy(epRuntime,
+     //   "SELECT istream max(kursZamkniecia) as maks  FROM KursAkcji.win:ext_timed_batch(data.getTime(), 7 days)");
+
+//ZADANIE 11
+   //     EPDeployment deployment = compileAndDeploy(epRuntime,
+    //    "SELECT istream pepsi.kursZamkniecia as kursPepsi, cola.kursZamkniecia as kursCocaCola, pepsi.data " +
+     //       "FROM KursAkcji(spolka = 'CocaCola').win:length(1) AS cola JOIN " +
+    //        "KursAkcji(spolka = 'PepsiCo').win:length(1) as pepsi ON cola.data = pepsi.data WHERE pepsi.kursZamkniecia > cola.kursZamkniecia");
+
+//ZADANIE 12
+  //      EPDeployment deployment = compileAndDeploy(epRuntime,
+    //    "SELECT istream cola.spolka, cola.data, cola.kursZamkniecia AS kursBiezacy, cola.kursZamkniecia - pepsi.kursZamkniecia AS roznica " +
+      //      "FROM KursAkcji(spolka in ('PepsiCo', 'CocaCola')).win:length(1) as cola join KursAkcji(spolka in ( 'CocaCola','PepsiCo')).std:firstunique(spolka) AS pepsi " +
+        //    "ON cola.spolka = pepsi.spolka");
+
+//ZADANIE 13
+ //       EPDeployment deployment = compileAndDeploy(epRuntime,
+   //     "SELECT istream sp1.spolka, sp1.data, sp1.kursZamkniecia AS kursBiezacy, sp1.kursZamkniecia - sp2.kursZamkniecia AS roznica " +
+     //       "FROM KursAkcji.win:length(1) as sp1 join  KursAkcji.std:firstunique(spolka) AS sp2 " +
+       //     "on sp1.spolka = sp2.spolka where sp1.kursZamkniecia > sp2.kursZamkniecia");
+
+//ZADANIE 14
+//        EPDeployment deployment = compileAndDeploy(epRuntime,
+  //      "SELECT istream sp1.data, sp2.data, sp1.spolka, sp1.kursOtwarcia, sp2.kursOtwarcia " +
+    //        "FROM KursAkcji.win:ext_timed(data.getTime(), 7 days) AS sp1 join KursAkcji.win:ext_timed(data.getTime(), 7 days) AS sp2 " +
+      //      "ON sp1.spolka = sp2.spolka WHERE sp1.kursOtwarcia - sp2.kursOtwarcia > 3");
+
+//ZADANIE 15
+  //      EPDeployment deployment = compileAndDeploy(epRuntime,
+   //     "SELECT istream data, spolka, obrot " +
+   //         "FROM  KursAkcji(market = 'NYSE').win:ext_timed_batch(data.getTime(), 7 days) ORDER BY obrot DESC LIMIT 3");
+
+//ZADANIE 16
+ //       EPDeployment deployment = compileAndDeploy(epRuntime,
+ //             "SELECT istream data, spolka, obrot from KursAkcji(market = 'NYSE').win:ext_timed_batch(data.getTime(), 7 days) " +
+    //          " ORDER BY obrot DESC LIMIT 1 OFFSET 2");
+

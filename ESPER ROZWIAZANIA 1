@@ -1,0 +1,49 @@
+//23
+        EPDeployment deployment = compileAndDeploy(epRuntime,
+                "SELECT irstream spolka as X, kursOtwarcia as Y " +
+                        "FROM KursAkcji.win:length(3) ");
+
+
+//24
+//        EPDeployment deployment = compileAndDeploy(epRuntime,
+//                "SELECT irstream spolka as X, kursOtwarcia as Y " +
+//                    "FROM KursAkcji.win:length(3) " +
+//                    "WHERE spolka = 'Oracle'");
+
+//25
+//        EPDeployment deployment = compileAndDeploy(epRuntime,
+//            "SELECT IRSTREAM data, kursOtwarcia, spolka " +
+//                "FROM KursAkcji.win:length(3) " +
+//                "WHERE spolka = 'Oracle'");
+
+
+//26
+//        EPDeployment deployment = compileAndDeploy(epRuntime,
+//            "SELECT IRSTREAM data, kursOtwarcia, spolka " +
+//                "FROM KursAkcji(spolka='Oracle').win:length(3) ");
+
+
+//27
+// Wyłaczenie generowania wynikowego strumienia zdarzeń usuwanych  - nie będzie RSTREAM
+//        EPDeployment deployment = compileAndDeploy(epRuntime,
+//        "SELECT ISTREAM data, kursOtwarcia, spolka " +
+//            "FROM KursAkcji(spolka='Oracle').win:length(3) ");
+
+//28
+//        EPDeployment deployment = compileAndDeploy(epRuntime,
+//        "SELECT ISTREAM MAX(kursOtwarcia) " +
+//            "FROM KursAkcji(spolka='Oracle').win:length(5) ");
+
+//29
+//        EPDeployment deployment = compileAndDeploy(epRuntime,
+//        "SELECT ISTREAM kursOtwarcia - MAX(kursOtwarcia) AS roznica " +
+//            "FROM KursAkcji(spolka='Oracle').win:length(5) ");
+// Funkcja max nie bierze największej wartości ze wszystkich danych tylko największą wartość z okna .
+
+//30
+//      EPDeployment deployment = compileAndDeploy(epRuntime,
+//            "SELECT ISTREAM data, spolka, kursOtwarcia - MIN(kursOtwarcia) AS roznica " +
+//                  "FROM KursAkcji(spolka='Oracle').win:length(2) " +
+//                "HAVING kursOtwarcia > MIN(kursOtwarcia)");
+
+// Odp: Uzyskany wynik jest poprawny, uzyskane zostały tylko wzrost.
